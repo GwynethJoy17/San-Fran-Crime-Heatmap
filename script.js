@@ -1,23 +1,21 @@
-var map = L.map('mapid').setView([38.6270, -90.1994], 13);
-L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.{ext}', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+var map = L.map('map').setView([37.7, -122.4], 10);
+
+var Stamen_Terrain = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 	subdomains: 'abcd',
 	minZoom: 0,
-	maxZoom: 20,
+	maxZoom: 18,
 	ext: 'png'
 }).addTo(map);
 
-var marker = L.marker([38.6450677978642, -90.26170132181247]).addTo(map);
-marker.bindPopup("Drunken Fish - Central West End").openPopup();
+$.getJSON('https://raw.githubusercontent.com/gbrunner/adv-programming-for-gis-and-rs/master/Web%20Development%20Module/Unit%201%20-%20GitHub%20and%20Leaflet/sf_crime.geojson', function(data) {
+  var coordinatesOnly = data.features.map(function(feature) {
+    return [feature.geometry.coordinates[1], feature.geometry.coordinates[0], 1];
+  });
 
-var marker = L.marker([38.62990709219426, -90.19214815573241]).addTo(map);
-marker.bindPopup("Sauce on the Side").openPopup();
+  var heat = L.heatLayer(coordinatesOnly).addTo(map);
+});
 
-var marker = L.marker([38.60842617075752, -90.20984355439138]).addTo(map);
-marker.bindPopup("John D. McGurks Irish Pub and Garden").openPopup();
 
-var marker = L.marker([38.60132854215099, -90.24214614446257]).addTo(map);
-marker.bindPopup("Rooster").openPopup();
-
-var marker = L.marker([38.63251291876637, -90.19925077733251]).addTo(map);
-marker.bindPopup("Medina Mediterranean Grill").openPopup();
+// make it so the heatmap becomes points at a certain zoom scale
+// hint: https://gis.stackexchange.com/questions/258515/show-hide-markers-depending-on-zoom-level
